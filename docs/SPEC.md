@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Avatar de rosto em SVG, cabeça **flutuante** (base do pescoço com fade), homem negro de **corte social**, rodando na web, que fala pt-BR com lip-sync por palavra e expressa emoções com o máximo de naturalidade que movimento vetorial permite.
+Avatar de rosto em SVG, cabeça **flutuante** (base do pescoço com fade), homem negro com **boné amarelo dos Lakers**, **óculos dourados**, **bigode e cavanhaque**, rodando na web, que fala pt-BR com lip-sync por palavra e expressa emoções com o máximo de naturalidade que movimento vetorial permite.
 
 ## Decisões fechadas
 
@@ -28,17 +28,17 @@ Avatar de rosto em SVG, cabeça **flutuante** (base do pescoço com fade), homem
 20. Streaming com buffer ~250–300ms; falha → "voz indisponível" + idle.
 21. Cache TTL em disco por `hash(texto+voice+model+emoção)`; `?nocache=1`.
 22. `persona.json` validado, sobrescrevível por instância.
-23. Só cabeça, cabelo curto estilizado, fundo transparente, `viewBox` responsivo.
+23. Só cabeça, boné/óculos/barba estilizados, fundo transparente, `viewBox` responsivo.
 24. `prefers-reduced-motion` + `aria-live`.
 25. Estrutura: `core` / `face` / `lipsync` / `audio` / `avatar` / `server` / `demo` / `tests`.
-26. 22 canais de rig (contrato abaixo).
+26. 29 canais escalares de rig (contrato abaixo).
 27. Ordem: SVG → canais+debug → lipsync mock → emoções → Fish → polimento.
 28. Validação: grade de screenshots Playwright + revisão manual.
 29. Código em inglês, UI em pt-BR, sem comentários.
 30. Tetos: 60fps, SVG <80KB, JS <60KB gzip, zero libs de animação.
 31. `thinking` como preset opcional (não automático).
 
-## Contrato do rig (22 canais)
+## Contrato do rig (29 canais)
 
 ```
 headYaw ±8° · headPitch ±5° · headRoll ±3° · headX/Y
@@ -93,7 +93,7 @@ Relógio mestre: `AudioContext.currentTime`. Sem timeline = sem boca animada (nu
 
 ## Personagem
 
-Homem negro, corte social (laterais curtas, topo levemente maior), pele com 3–4 tons em gradiente (sem rugas/poros), sobrancelha densa, olhos com brilho especular, lábios com dois tons, orelhas visíveis, pescoço truncado em fade.
+Homem negro, boné amarelo dos Lakers com logo recriado (bola + lettering), óculos dourados de aro fino, bigode e cavanhaque, pele com 3–4 tons em gradiente (sem rugas/poros), sobrancelha densa, olhos com brilho especular, lábios com dois tons, orelhas visíveis, pescoço truncado em fade escuro.
 
 ## API pública (rascunho)
 
@@ -122,4 +122,4 @@ avatar.unlock()
 - Timestamps por palavra exigem mapeador próprio; precisão nunca será fonema-exata.
 - Streaming + alinhamento incremental pode gerar `syncwarn` em rede ruim.
 - SVG tem teto de realismo; o "humano" vem do movimento.
-- Cabelo/corte social em SVG é o item artístico mais difícil de acertar.
+- Logo dos Lakers, boné e óculos em SVG são os itens artísticos mais difíceis de acertar.

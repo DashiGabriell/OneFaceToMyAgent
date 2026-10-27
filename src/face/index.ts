@@ -1,0 +1,5 @@
+export { buildFaceSvg } from './face.ts'
+export type { FaceSvgOptions } from './face.ts'
+export { FACE_PARTS, FACE_PART_ORIGINS } from './parts.ts'
+export type { FacePart } from './parts.ts'
+export { FACE_VIEWBOX, palette } from './palette.ts'

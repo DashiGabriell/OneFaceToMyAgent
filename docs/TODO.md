@@ -11,9 +11,9 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 | Fase | Entrega | Status |
 |---|---|---|
 | 0 | Fundação do projeto | `[x]` |
-| 1 | Rosto SVG riggável | `[ ]` |
-| 2 | Canais, solver e painel de debug | `[ ]` |
-| 3 | Lip-sync determinístico | `[ ]` |
+| 1 | Rosto SVG riggável | `[x]` |
+| 2 | Canais, solver e painel de debug | `[x]` |
+| 3 | Lip-sync determinístico | `[x]` |
 | 4 | Emoções e blending | `[ ]` |
 | 5 | Integração FishAudio | `[ ]` |
 | 6 | Naturalidade, performance e acessibilidade | `[ ]` |
@@ -43,23 +43,27 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 ## Fase 1 — Rosto SVG riggável
 
-**Objetivo:** cabeça de homem negro, corte social, estática, com todas as camadas nomeadas que o rig vai manipular.
+**Objetivo:** cabeça de homem negro com boné amarelo dos Lakers, óculos dourados, bigode e cavanhaque, estática, com todas as camadas nomeadas que o rig vai manipular.
 
-- [ ] Definir `viewBox` e proporções (cabeça ~1000×1200 unidades), fundo transparente.
-- [ ] Criar paleta de pele com 3–4 tons em gradientes suaves (luz principal no alto-esquerda).
-- [ ] Desenhar silhueta da cabeça e orelhas.
-- [ ] Desenhar pescoço truncado com fade suave (sem corte reto).
-- [ ] Desenhar cabelo corte social: laterais curtas + topo levemente maior, com 3–4 camadas de volume.
-- [ ] Desenhar sobrancelhas densas (esquerda e direita como paths separados).
-- [ ] Desenhar olhos: esclera, íris, pupila, brilho especular, pálpebra superior e inferior separadas.
-- [ ] Desenhar nariz com narinas e sombra lateral.
-- [ ] Desenhar boca completa: cavidade, dentes superiores, dentes inferiores, língua, lábio superior e inferior em tons distintos.
-- [ ] Aplicar convenção de nomes `data-part="..."` para cada elemento riggável.
-- [ ] Documentar o mapa de camadas em `docs/RIG-MAP.md` (part → canal(is) que a move).
-- [ ] Garantir que cada `data-part` tem `transform-box: fill-box` e origem definida.
-- [ ] Medir tamanho do SVG inline (meta: < 80 KB).
+- [x] Definir `viewBox` e proporções (cabeça ~1000×1200 unidades), fundo transparente.
+- [x] Criar paleta de pele com 3–4 tons em gradientes suaves (luz principal no alto-esquerda).
+- [x] Desenhar silhueta da cabeça, orelhas e pescoço truncado com fade escuro.
+- [x] Desenhar boné: copa com costuras, botão, aba larga e sombra projetada sob a testa.
+- [x] Recriar o logo dos Lakers (bola de basquete + lettering "LOS ANGELES / LAKERS").
+- [x] Desenhar óculos dourados: armação, lentes, ponte, hastes até as orelhas e reflexos.
+- [x] Desenhar sobrancelhas densas (esquerda e direita como paths separados).
+- [x] Desenhar olhos: esclera, íris, pupila, brilho especular, pálpebra superior e inferior separadas.
+- [x] Desenhar nariz com narinas, asas e sombra lateral.
+- [x] Desenhar boca completa: cavidade, dentes superiores, dentes inferiores, língua, lábio superior e inferior em tons distintos.
+- [x] Desenhar bigode e cavanhaque com textura de fios.
+- [x] Aplicar convenção de nomes `data-part="..."` para cada elemento riggável.
+- [x] Documentar o mapa de camadas em `docs/RIG-MAP.md` (part → canal(is) que a move).
+- [x] Garantir que cada `data-part` tem `transform-box: fill-box` e origem definida.
+- [x] Medir tamanho do SVG inline (meta: < 80 KB).
 
 **Verificação:** screenshot do rosto neutro em `tests/snapshots/face-neutral.png`; mapa de camadas revisado.
+
+**Executado:** 37 `data-part` com origem própria · SVG 29.127 bytes (6.263 gzip) · `npm run build` OK · `npm test` 9/9 · Playwright 2/2 · `docs/RIG-MAP.md` atualizado · screenshot revisado em `tests/snapshots/face-neutral.png`.
 
 ---
 
@@ -67,18 +71,20 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** o rosto se move sem áudio, por sliders, com movimento suave e limitado.
 
-- [ ] Definir `RigParams` com os 22 canais em `src/core/params.ts` (tipo + range + default).
-- [ ] Implementar `clampParams` e `mergeParams` (aditivo com clamp por canal).
-- [ ] Implementar solver spring/damper por canal (stiffness, damping, dt fixo).
-- [ ] Definir interface `RigBackend` (`apply(params)`, `reset()`, `getBounds()`).
-- [ ] Implementar `SvgRigBackend`: mapear cada canal para transform/atributo do `data-part`.
-- [ ] Implementar loop único com `requestAnimationFrame` (um só para todo o app).
-- [ ] Criar painel `?debug=1`: sliders para todos os canais, valor atual e alvo.
-- [ ] Criar botão "reset" e presets de debug (neutral, extremes).
-- [ ] Rodar script Playwright que gera grade de screenshots dos extremos de cada canal.
-- [ ] Medir frame time com painel aberto (meta: < 6 ms por frame em 1000×1200).
+- [x] Definir `RigParams` com os 29 canais em `src/core/params.ts` (tipo + range + default).
+- [x] Implementar `clampParams` e `mergeParams` (aditivo com clamp por canal).
+- [x] Implementar solver spring/damper por canal (stiffness, damping, dt fixo).
+- [x] Definir interface `RigBackend` (`apply(params)`, `reset()`, `getBounds()`).
+- [x] Implementar `SvgRigBackend`: mapear cada canal para transform/atributo do `data-part`.
+- [x] Implementar loop único com `requestAnimationFrame` (um só para todo o app).
+- [x] Criar painel `?debug=1`: sliders para todos os canais, valor atual e alvo.
+- [x] Criar botão "reset" e presets de debug (neutral, extremes).
+- [x] Rodar script Playwright que gera grade de screenshots dos extremos de cada canal.
+- [x] Medir frame time com painel aberto (meta: < 6 ms por frame em 1000×1200).
 
-**Verificação:** todos os 22 canais movem visivelmente a parte correta; grade de screenshots gerada; sem jank.
+**Verificação:** todos os 29 canais movem visivelmente a parte correta; grade de screenshots gerada; sem jank.
+
+**Executado:** 29 canais em `src/core/params.ts` · solver spring com dt fixo e clamp por canal · `SvgRigBackend` + loop rAF único · painel `?debug=1` com 29 sliders, valor atual/alvo, reset e extremos · grade `?grid=1` com 58 estados · `npm test` 22/22 · Playwright 4/4 · frame JS ~0.1 ms no Chromium headless (< 6 ms) · JS de produção 41.92 kB (11.45 kB gzip).
 
 ---
 
@@ -86,18 +92,20 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** dada uma timeline fixa (mock), a boca fala de forma convincente e suave, sem Fish.
 
-- [ ] Definir os 12 visemas como combinações de canais em `src/lipsync/visemes.ts`.
-- [ ] Criar tabela grafema→visema para pt-BR (vogais, consoantes, dígrafos `ão`, `em`, `ch`, `lh`, `nh`, `rr`, `ss`, `qu`, `gu`).
-- [ ] Criar dicionário de exceções para palavras frequentes.
-- [ ] Implementar tokenização de palavra em unidades faladas + pesos por classe (vogal longa, oclusiva curta, nasal alongada, sibilante).
-- [ ] Implementar `buildWordTimeline(word, start, end)` com distribuição ponderada.
-- [ ] Implementar montagem de timeline global (`WordSegment[] → VisemeEvent[]`).
-- [ ] Implementar coarticulação: janela ±120 ms misturando visemas vizinhos.
-- [ ] Implementar prévia `?debug=1`: loop automático de visemas + loop de frase mock.
-- [ ] Escrever testes unitários (`node:test`) para tokenização, dígrafos, pesos e não-sobreposição de tempos.
-- [ ] Validar visualmente: gravar 10 s de loop de visemas e revisar quadro a quadro.
+- [x] Definir os 12 visemas como combinações de canais em `src/lipsync/visemes.ts`.
+- [x] Criar tabela grafema→visema para pt-BR (vogais, consoantes, dígrafos `ão`, `em`, `ch`, `lh`, `nh`, `rr`, `ss`, `qu`, `gu`).
+- [x] Criar dicionário de exceções para palavras frequentes.
+- [x] Implementar tokenização de palavra em unidades faladas + pesos por classe (vogal longa, oclusiva curta, nasal alongada, sibilante).
+- [x] Implementar `buildWordTimeline(word, start, end)` com distribuição ponderada.
+- [x] Implementar montagem de timeline global (`WordSegment[] → VisemeEvent[]`).
+- [x] Implementar coarticulação: janela ±120 ms misturando visemas vizinhos.
+- [x] Implementar prévia `?debug=1`: loop automático de visemas + loop de frase mock.
+- [x] Escrever testes unitários (`node:test`) para tokenização, dígrafos, pesos e não-sobreposição de tempos.
+- [x] Validar visualmente: grade dos 12 visemas + screenshot do loop em `?debug=1`.
 
 **Verificação:** `npm test` verde; loop de visemas sem "piscadas" de boca; dígrafos pt-BR corretos.
+
+**Executado:** 12 visemas em `src/lipsync/visemes.ts` · tabela grafema→visema, dígrafos e exceções em `phonemes.ts` · timeline ponderada sem sobreposição e coarticulação ±120 ms em `timeline.ts` · `LipSyncPlayer` via `RigDriver` · loop de visemas e frase mock no `?debug=1` · grade `?visemes=1` com 12 visemas · `npm test` 33/33 · Playwright 6/6 · JS de produção 48.67 kB (13.75 kB gzip) · screenshots `tests/snapshots/visemes.png` e `lipsync.png`.
 
 ---
 

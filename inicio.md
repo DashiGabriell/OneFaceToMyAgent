@@ -24,7 +24,7 @@ O escopo do v1 é uma demonstração ponta a ponta (texto → voz → rosto fala
 ### Conceito e escopo
 
 - Visual **pseudo-3D vetorial**: volume e perspectiva simulados por camadas em parallax (yaw, pitch, roll) e proporções semi-realistas.
-- Personagem: **homem negro, corte social**, cabeça flutuante com a base do pescoço em fade, fundo transparente, `viewBox` responsivo.
+- Personagem: **homem negro com boné amarelo dos Lakers, óculos dourados, bigode e cavanhaque**, cabeça flutuante com a base do pescoço em fade, fundo transparente, `viewBox` responsivo.
 - Boca com cavidade, dentes e língua. Sem rugas, poros ou textura de pele: o realismo vem do movimento, não do detalhe estático.
 - Olhar fixo à frente (direção do usuário). Não há rastreamento de mouse.
 
@@ -100,7 +100,7 @@ O componente consome a API de comandos, mantém o áudio e o relógio, e emite e
 - A precisão do lip-sync é limitada pelos timestamps por palavra; nunca será fonema-exata.
 - Streaming com alinhamento incremental pode gerar avisos de sincronia em rede ruim.
 - O SVG tem teto de realismo; a sensação de vida depende do movimento.
-- Cabelo de corte social em SVG é o item artístico mais difícil de acertar.
+- Logo dos Lakers, boné e óculos em SVG são os itens artísticos mais difíceis de acertar.
 
 ## Próximos passos
 
