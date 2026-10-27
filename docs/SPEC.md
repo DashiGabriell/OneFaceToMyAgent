@@ -73,6 +73,10 @@ texto → proxy → Fish SSE (opus, balanced, pt-BR)
 
 Relógio mestre: `AudioContext.currentTime`. Sem timeline = sem boca animada (nunca inventar fala).
 
+### Regra de dependência
+
+`core` não importa nenhum outro módulo do projeto. `face`, `lipsync` e `audio` importam apenas `core`. `avatar` pode importar todos, mas ninguém importa `avatar`. `server` é exclusivo do backend e nunca é importado pelo cliente. `demo` consome apenas a API pública de `avatar`.
+
 ## "O mais humano possível" — micro-comportamentos
 
 - Interpolação **spring/damper** por canal (nada de lerp linear).

@@ -4,11 +4,13 @@ Plano de execução derivado de [`SPEC.md`](./SPEC.md). Cada fase termina com al
 
 Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
+> **Ambiente:** o projeto foi migrado de `E:\rosto-svg` (volume removível FAT32 que corrompeu arquivos) para `C:\Users\Gabriell\Projetos\rosto-svg` (NTFS). O `E:` não deve mais ser usado. A chave `API_KEY_FISHAUDIO` foi perdida na corrupção e precisa ser reinserida no `.env`.
+
 ## Status geral
 
 | Fase | Entrega | Status |
 |---|---|---|
-| 0 | Fundação do projeto | `[ ]` |
+| 0 | Fundação do projeto | `[x]` |
 | 1 | Rosto SVG riggável | `[ ]` |
 | 2 | Canais, solver e painel de debug | `[ ]` |
 | 3 | Lip-sync determinístico | `[ ]` |
@@ -22,18 +24,20 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** projeto roda vazio, tipado e testável, sem nenhuma decisão de arte ainda.
 
-- [ ] Criar `package.json` (privado, ESM, engines Node >= 24).
-- [ ] Instalar Vite + TypeScript (strict) como dev deps.
-- [ ] Instalar Playwright (apenas para screenshots de regressão).
-- [ ] Configurar `tsconfig.json` com `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`.
-- [ ] Configurar `vite.config.ts` (root `demo/`, alias `@/` → `src/`).
-- [ ] Criar estrutura de pastas: `src/core`, `src/face`, `src/lipsync`, `src/audio`, `src/avatar`, `server`, `demo`, `tests`, `docs`.
-- [ ] Definir regra de dependência: `face`/`lipsync`/`audio` → `core`; `avatar` → todos; `core` não importa ninguém.
-- [ ] Criar `demo/index.html` + `demo/main.ts` com placeholder.
-- [ ] Garantir que `.env` continua ignorado (já está) e documentar `API_KEY_FISHAUDIO` em `.env.example`.
-- [ ] Scripts: `dev`, `build`, `preview`, `test`, `test:visual`.
+- [x] Criar `package.json` (privado, ESM, engines Node >= 24).
+- [x] Instalar Vite + TypeScript (strict) como dev deps.
+- [x] Instalar Playwright (apenas para screenshots de regressão).
+- [x] Configurar `tsconfig.json` com `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`.
+- [x] Configurar `vite.config.ts` (root `demo/`, alias `@/` → `src/`).
+- [x] Criar estrutura de pastas: `src/core`, `src/face`, `src/lipsync`, `src/audio`, `src/avatar`, `server`, `demo`, `tests`, `docs`.
+- [x] Definir regra de dependência: `face`/`lipsync`/`audio` → `core`; `avatar` → todos; `core` não importa ninguém.
+- [x] Criar `demo/index.html` + `demo/main.ts` com placeholder.
+- [x] Garantir que `.env` continua ignorado (já está) e documentar `API_KEY_FISHAUDIO` em `.env.example`.
+- [x] Scripts: `dev`, `build`, `preview`, `test`, `test:visual`.
 
 **Verificação:** `npm run dev` abre página em branco sem erro de console; `npm run build` passa.
+
+**Executado:** `npm run build` OK · `npm test` 3/3 · Playwright smoke (`tests/visual/foundation.spec.ts`) OK · Vite 7.3.7 + TypeScript 5.9.3 + Node 24.
 
 ---
 
