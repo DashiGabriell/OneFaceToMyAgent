@@ -5,3 +5,11 @@ test-results/
 playwright-report/
 .cache/
 *.local
+
+face-3d/rig/work/previews/
+face-3d/rig/work/*.blend1
+face-3d/rig/*.log
+face-3d/rig/decimate*/
+face-3d/rig/masks/
+face-3d/rig/smooth_test/
+face-3d/rig/closeups/
