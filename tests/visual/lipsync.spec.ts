@@ -12,7 +12,7 @@ test('debug lip-sync loop drives the mouth and stops cleanly', async ({ page }) 
 
   await page.goto('/?debug=1')
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true')
-  await expect(page.locator('html')).toHaveAttribute('data-phase', '3')
+  await expect(page.locator('html')).toHaveAttribute('data-phase', '6')
 
   const panel = page.locator('#debug-panel')
   await expect(panel).toBeVisible()

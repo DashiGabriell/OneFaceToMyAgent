@@ -12,15 +12,19 @@ test('debug panel exposes every channel and drives the rig', async ({ page }) =>
 
   await page.goto('/?debug=1')
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true')
-  await expect(page.locator('html')).toHaveAttribute('data-phase', '3')
+  await expect(page.locator('html')).toHaveAttribute('data-phase', '6')
 
   const panel = page.locator('#debug-panel')
   await expect(panel).toBeVisible()
-  await expect(panel.locator('.debug-row')).toHaveCount(29)
+  await expect(panel.locator('.debug-group .debug-row')).toHaveCount(29)
   await expect(panel.locator('.debug-group')).toHaveCount(6)
 
   const bounds = await page.evaluate(() => {
-    const avatar = (window as Window & { __avatar?: { engine: { getBounds(): { width: number; height: number } } } }).__avatar
+    const avatar = (
+      window as Window & {
+        __avatar?: { engine: { getBounds(): { width: number; height: number } } }
+      }
+    ).__avatar
     return avatar?.engine.getBounds()
   })
   expect(bounds?.width ?? 0).toBeGreaterThan(0)
@@ -29,32 +33,61 @@ test('debug panel exposes every channel and drives the rig', async ({ page }) =>
   const jaw = page.locator('#face [data-part="jaw"]')
   const head = page.locator('#face [data-part="head"]')
   const neutralJaw = await jaw.evaluate((element) => getComputedStyle(element).transform)
-  const neutralHead = await head.evaluate((element) => getComputedStyle(element).transform)
 
   const jawInput = panel.locator('.debug-row[data-channel="jawOpen"] input')
   await jawInput.evaluate((input: HTMLInputElement) => {
     input.value = '1'
     input.dispatchEvent(new Event('input', { bubbles: true }))
   })
-  await page.waitForTimeout(450)
-  const openJaw = await jaw.evaluate((element) => getComputedStyle(element).transform)
-  expect(openJaw).not.toBe(neutralJaw)
+  await expect
+    .poll(async () => jaw.evaluate((element) => getComputedStyle(element).transform), {
+      timeout: 2000,
+    })
+    .not.toBe(neutralJaw)
 
+  const headBefore = await head.evaluate((element) => getComputedStyle(element).transform)
   const headInput = panel.locator('.debug-row[data-channel="headYaw"] input')
   await headInput.evaluate((input: HTMLInputElement) => {
     input.value = '8'
     input.dispatchEvent(new Event('input', { bubbles: true }))
   })
-  await page.waitForTimeout(450)
+  await expect
+    .poll(
+      async () => {
+        const params = await page.evaluate(() => {
+          const avatar = (
+            window as Window & {
+              __avatar?: { engine: { getBaseTarget(): { headYaw: number; jawOpen: number } } }
+            }
+          ).__avatar
+          return avatar?.engine.getBaseTarget() ?? null
+        })
+        return params
+      },
+      { timeout: 2000 },
+    )
+    .toMatchObject({ headYaw: 8, jawOpen: 1 })
+
   const turnedHead = await head.evaluate((element) => getComputedStyle(element).transform)
-  expect(turnedHead).not.toBe(neutralHead)
+  expect(turnedHead).not.toBe(headBefore)
 
   await panel.locator('[data-debug-reset]').click()
-  await page.waitForTimeout(120)
-  const resetJaw = await jaw.evaluate((element) => getComputedStyle(element).transform)
-  const resetHead = await head.evaluate((element) => getComputedStyle(element).transform)
-  expect(resetJaw).toBe(neutralJaw)
-  expect(resetHead).toBe(neutralHead)
+  await expect
+    .poll(
+      async () => {
+        const params = await page.evaluate(() => {
+          const avatar = (
+            window as Window & {
+              __avatar?: { engine: { getBaseTarget(): { headYaw: number; jawOpen: number } } }
+            }
+          ).__avatar
+          return avatar?.engine.getBaseTarget() ?? null
+        })
+        return params
+      },
+      { timeout: 2000 },
+    )
+    .toMatchObject({ headYaw: 0, jawOpen: 0 })
 
   await panel.locator('[data-debug-extremes]').click()
   await page.waitForTimeout(120)

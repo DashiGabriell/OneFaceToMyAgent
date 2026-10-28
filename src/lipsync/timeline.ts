@@ -1,3 +1,5 @@
+import type { EmotionName } from '../core/emotion.ts'
+import { parseEmotionTags } from '../core/emotion-tags.ts'
 import type { RigParams } from '../core/params.ts'
 import { wordToUnits } from './phonemes.ts'
 import { VISEME_CHANNELS, VISEME_NAMES, VISEMES } from './visemes.ts'
@@ -86,6 +88,37 @@ export function buildMockSegments(
 
 export function buildMockTimeline(text: string): VisemeEvent[] {
   return buildTimeline(buildMockSegments(text))
+}
+
+export interface EmotionCue {
+  readonly emotion: EmotionName
+  readonly at: number
+}
+
+export interface EmotionTimeline {
+  readonly events: VisemeEvent[]
+  readonly cues: EmotionCue[]
+}
+
+export const EMOTION_CUE_GAP = 0.22
+
+export function buildEmotionTimeline(text: string, start = 0): EmotionTimeline {
+  const { segments } = parseEmotionTags(text)
+  const events: VisemeEvent[] = []
+  const cues: EmotionCue[] = []
+  let cursor = start
+
+  for (const segment of segments) {
+    const words = buildMockSegments(segment.text, cursor)
+    const first = words[0]
+    const last = words.at(-1)
+    if (!first || !last) continue
+    if (segment.emotion) cues.push({ emotion: segment.emotion, at: first.start })
+    events.push(...buildTimeline(words))
+    cursor = last.end + EMOTION_CUE_GAP
+  }
+
+  return { events, cues }
 }
 
 export function buildVisemeLoop(holdSeconds = 0.8): VisemeEvent[] {

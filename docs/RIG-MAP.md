@@ -132,3 +132,75 @@ grade com 58 células; frame JS ~0.1 ms no Chromium headless.
 **Verificado:** testes de dígrafos, exceções, pesos, timeline sem sobreposição,
 blend de fronteira e fallback de rest; loop e frase mock movem a boca; grade com
 12 visemas; screenshot do player em `tests/snapshots/lipsync.png`.
+
+## Emoções e blending (Fase 4)
+
+- `src/core/emotion.ts`: presets `neutral`, `happy`, `sad`, `surprised`, `thinking`
+  como `Partial<RigParams>` aditivos (delta) e versões de flash para a
+  micro-expressão. Nenhum canal novo: a emoção é sempre um delta sobre os 29 canais.
+- `src/core/emotion-mixer.ts`: duas camadas temporais.
+  - `mood`: transição de 300–600 ms (default 450), pesos normalizados
+    (`1 / max(1, soma)`) para misturar presets; `neutral` zera o mood.
+  - `reaction`: impulso com ataque curto e decaimento de 1–3 s (default 1,8 s).
+  - `flash`: pulso de 80–150 ms (default 110) derivado do preset, somado ao mood
+    enquanto ele ainda está assentando.
+- `RigEngine.setModifier` mantém `baseTarget` (visema, sliders, idle) separado do
+  `target` composto: `mergeParams(baseTarget, delta)` aplica o delta e faz clamp
+  por canal a cada frame. Trocar de emoção não reinicia a fala: só o delta muda.
+- `[EMO:x]` (`src/core/emotion-tags.ts`) é opt-in; `buildEmotionTimeline` transforma
+  os trechos em cues de tempo sobre a timeline mock, e `LipSyncPlayer.playMock` só
+  aplica quando `emotionTags: true`.
+- `?debug=1`: 5 presets, peso, aplicar como mood, disparar reação, limpar, status
+  com pesos, camada e TTL, além de uma frase editável com tag.
+- `?emotions=1`: grade 5 emoções × 3 visemas (A, MBP, O) = 15 células.
+- API: `avatar.setEmotion(name, { weight, layer, transitionMs, flash, decayMs })`,
+  `avatar.react`, `avatar.setEmotionMix`, `avatar.clearEmotion`.
+
+**Verificado:** transição parte de zero e assenta no intervalo configurado; troca
+no meio não salta; flash expira em ≤150 ms; reação decai e some em ≤3 s; composição
+clampada; 3 emoções trocadas ao vivo durante a frase; grade revisada em
+`tests/snapshots/emotions.png`; 65 testes unitários e 8 Playwright verdes.
+
+## Idle e naturalidade (Fase 6)
+
+Canais movidos continuamente pelo `IdleSimulator` (delta no modifier, junto com emoção):
+
+| Comportamento | Canais | Notas |
+|---|---|---|
+| Drift de cabeça | `headYaw`, `headPitch`, `headRoll`, `headX`, `headY` | PRNG + senoides lentas; off em `prefers-reduced-motion` |
+| Piscar | `eyelidOpenL/R` | Jitter 2–6 s, assimetria, ~10% dupla, antecipação antes de `say()` |
+| Gaze | `gazeX`, `gazeY`, `pupilDilate` | Micro-sacadas + tremor; olhar permanece à frente |
+| Respiração | `breath`, `headPitch`, `noseFlare` | ~0,22 Hz; eleva cabeça e fade do pescoço |
+| Ênfase prosódica | `headPitch`, `browRaiseL/R`, `browAngleL/R` | Energia do `AnalyserNode`; off em reduced-motion |
+| Tensão labial | `lipPress`, `mouthWidth` | Residual entre palavras na timeline de fala |
+
+## Fala com áudio (Fase 5)
+
+- `server/` é Node puro, sem framework: `GET /api/persona`, `GET /api/health`,
+  `POST /api/tts` e arquivos estáticos de `dist/`.
+- A `API_KEY_FISHAUDIO` só é lida no servidor (`process.loadEnvFile`), nunca vai
+  para o bundle do cliente.
+- `POST /v1/tts/stream/with-timestamp` com header `model`
+  (`s2.1-pro-free` no persona), `format: opus`, `latency: balanced`, `language: pt-BR`
+  e `reference_id` apenas quando `voiceId` está preenchido.
+- `fish.ts` faz o parse SSE incremental e normaliza `audio_base64`, `chunk_seq`,
+  `chunk_audio_offset_sec` e `alignment.segments`; o servidor repassa em NDJSON
+  (meta → audio/alignment → done) sem bufferizar a resposta inteira.
+- Cache em disco LRU+TTL em `.cache/tts`, chave sha256 de
+  `texto+voice+model+format+lang+emoção`; `?nocache=1` ignora a leitura e regrava.
+- Cliente: `AudioQueue` usa `AudioContext.currentTime` como relógio mestre, buffer
+  de 280 ms, WAV incremental e `decodeAudioData` para opus/mp3; interrupção com
+  fade de 150 ms.
+- `SpeechController` monta a timeline incremental por `chunk_seq`, emite `syncwarn`
+  quando o alignment atrasa mais de 300 ms, `speechstart`/`viseme`/`speechend`/`error`,
+  suporta `{ queue: true }` e nunca inventa boca sem alignment.
+- `persona.json` (raiz) validado por `src/core/persona.ts` e servido em `/api/persona`.
+- A demo principal tem gate "clique para ouvir", frase, emoção, Ouvir/Parar e status;
+  `?nocache=1` força nova geração.
+- `FISHAUDIO_MOCK=1` gera WAV sintetizado com alignment por palavra, só em dev.
+
+**Verificado:** stream NDJSON, cache hit, `nocache`, erro 502, parser SSE, WAV,
+timeline e persona; fala + boca + emoção + cache no Chromium; screenshot
+`tests/snapshots/speech.png`. **Na API real com `s2.1-pro-free`:** primeira fala em
+1.008 ms, `jawOpen` variando de 0,02 a 0,90 durante a frase e repetição em cache em
+198 ms (`falando · cache`), com Opus (`OggS`) decodificado progressivamente.

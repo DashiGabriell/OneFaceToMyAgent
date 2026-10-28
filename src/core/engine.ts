@@ -17,15 +17,19 @@ export interface FrameSnapshot {
 
 export type FrameListener = (snapshot: FrameSnapshot) => void
 export type RigDriver = (now: number, dt: number) => Partial<RigParams> | null
+export type RigModifier = (now: number, dt: number) => Partial<RigParams>
 
 const MAX_FRAME_DT = 0.05
 const NOTIFY_INTERVAL_MS = 33
 
 export class RigEngine {
   private readonly solver = new SpringSolver()
+  private baseTarget: RigParams = { ...DEFAULT_RIG_PARAMS }
   private target: RigParams = { ...DEFAULT_RIG_PARAMS }
+  private lastDelta: Partial<RigParams> = {}
   private readonly listeners = new Set<FrameListener>()
   private driver: RigDriver | null = null
+  private modifier: RigModifier | null = null
   private raf = 0
   private running = false
   private lastTime = 0
@@ -54,39 +58,45 @@ export class RigEngine {
 
   destroy(): void {
     this.stop()
+    this.driver = null
+    this.modifier = null
     this.listeners.clear()
   }
 
   setTarget(partial: Partial<RigParams>): void {
-    this.target = resolveParams(partial, this.target)
-    this.solver.setTarget(this.target)
+    this.baseTarget = resolveParams(partial, this.baseTarget)
+    this.commitBase()
   }
 
   setChannelTarget(channel: RigChannel, value: number): void {
-    this.target[channel] = clampChannel(channel, value)
-    this.solver.setTarget(this.target)
+    this.baseTarget[channel] = clampChannel(channel, value)
+    this.commitBase()
   }
 
   addTarget(delta: Partial<RigParams>): void {
-    this.target = mergeParams(this.target, delta)
-    this.solver.setTarget(this.target)
+    this.baseTarget = mergeParams(this.baseTarget, delta)
+    this.commitBase()
   }
 
   setParams(partial: Partial<RigParams>): void {
-    this.target = resolveParams(partial, this.target)
+    this.baseTarget = resolveParams(partial, this.baseTarget)
+    this.target = mergeParams(this.baseTarget, this.lastDelta)
     this.solver.snap(this.target)
     this.backend.apply(this.target)
     this.notify(performance.now(), true)
   }
 
   setChannelParams(channel: RigChannel, value: number): void {
-    this.target[channel] = clampChannel(channel, value)
+    this.baseTarget[channel] = clampChannel(channel, value)
+    this.target = mergeParams(this.baseTarget, this.lastDelta)
     this.solver.snap(this.target)
     this.backend.apply(this.target)
     this.notify(performance.now(), true)
   }
 
   reset(): void {
+    this.baseTarget = { ...DEFAULT_RIG_PARAMS }
+    this.lastDelta = {}
     this.target = { ...DEFAULT_RIG_PARAMS }
     this.solver.snap(this.target)
     this.backend.reset()
@@ -95,6 +105,10 @@ export class RigEngine {
 
   getTarget(): RigParams {
     return { ...this.target }
+  }
+
+  getBaseTarget(): RigParams {
+    return { ...this.baseTarget }
   }
 
   getParams(): RigParams {
@@ -124,6 +138,17 @@ export class RigEngine {
     this.driver = driver
   }
 
+  setModifier(modifier: RigModifier | null): void {
+    this.modifier = modifier
+    if (!modifier) this.lastDelta = {}
+    this.commitBase()
+  }
+
+  private commitBase(): void {
+    this.target = mergeParams(this.baseTarget, this.lastDelta)
+    this.solver.setTarget(this.target)
+  }
+
   private tick = (now: number): void => {
     if (!this.running) return
     const rawDt = Math.max((now - this.lastTime) / 1000, 0)
@@ -132,9 +157,12 @@ export class RigEngine {
     const started = performance.now()
     const driven = this.driver?.(now, dt)
     if (driven) {
-      this.target = resolveParams(driven, this.target)
-      this.solver.setTarget(this.target)
+      this.baseTarget = resolveParams(driven, this.baseTarget)
     }
+    const delta = this.modifier?.(now, dt)
+    if (delta) this.lastDelta = delta
+    this.target = mergeParams(this.baseTarget, this.lastDelta)
+    this.solver.setTarget(this.target)
     const params = this.solver.update(dt)
     this.backend.apply(params)
     const elapsed = performance.now() - started

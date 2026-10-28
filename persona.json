@@ -1,0 +1,10 @@
+{
+  "voiceId": "1a61293f8fa8441f804deb10d0b2bc95",
+  "model": "s2.1-pro-free",
+  "format": "opus",
+  "language": "pt-BR",
+  "defaultMood": "neutral",
+  "intensity": 1,
+  "blinkRange": [2, 6],
+  "headAccentRate": 0.35
+}

@@ -12,7 +12,7 @@ test('renders all 12 viseme shapes in one contact sheet', async ({ page }) => {
 
   await page.goto('/?visemes=1')
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true')
-  await expect(page.locator('html')).toHaveAttribute('data-phase', '3')
+  await expect(page.locator('html')).toHaveAttribute('data-phase', '6')
 
   const grid = page.locator('#viseme-grid')
   await expect(grid).toBeVisible()

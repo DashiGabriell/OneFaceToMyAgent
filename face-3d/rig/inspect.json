@@ -1,0 +1,119 @@
+﻿
+{
+  "objects": [
+    {
+      "name": "tripo_node_6e048316",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        4.5746564865112305e-05,
+        -0.0186309814453125,
+        0.0
+      ],
+      "rotation_euler": [
+        -4.371138828673793e-08,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dimensions": [
+        0.7511903047561646,
+        0.9394837617874146,
+        0.979248046875
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          4.5746564865112305e-05
+        ],
+        [
+          0.0,
+          1.0,
+          4.371138828673793e-08,
+          -0.0186309814453125
+        ],
+        [
+          0.0,
+          -4.371138828673793e-08,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "verts": 209859,
+      "edges": 629601,
+      "polys": 419734,
+      "materials": [
+        "tripo_mat_6e048316"
+      ],
+      "shape_keys": null,
+      "vertex_groups": [],
+      "modifiers": [],
+      "uv_layers": [
+        "UVMap"
+      ],
+      "has_custom_normals": true,
+      "bbox_world": {
+        "min": [
+          -0.37554940581321716,
+          -0.4883728325366974,
+          8.711464438704297e-09
+        ],
+        "max": [
+          0.3756408989429474,
+          0.45111092925071716,
+          0.979248046875
+        ]
+      }
+    }
+  ],
+  "materials": [
+    "tripo_mat_6e048316"
+  ],
+  "images": [
+    {
+      "name": "head_with_cap_3d_model_basecolor",
+      "filepath": "C:\\Users\\Gabriell\\Projetos\\rosto-svg\\face-3d\\tripo_convert_6e048316-6be3-424d-8f69-3a9c0430f462.fbm\\head_with_cap_3d_model_basecolor.JPEG",
+      "size": [
+        4096,
+        4096
+      ]
+    },
+    {
+      "name": "head_with_cap_3d_model_metallic",
+      "filepath": "C:\\Users\\Gabriell\\Projetos\\rosto-svg\\face-3d\\tripo_convert_6e048316-6be3-424d-8f69-3a9c0430f462.fbm\\head_with_cap_3d_model_metallic.JPEG",
+      "size": [
+        4096,
+        4096
+      ]
+    },
+    {
+      "name": "head_with_cap_3d_model_normal",
+      "filepath": "C:\\Users\\Gabriell\\Projetos\\rosto-svg\\face-3d\\tripo_convert_6e048316-6be3-424d-8f69-3a9c0430f462.fbm\\head_with_cap_3d_model_normal.PNG",
+      "size": [
+        4096,
+        4096
+      ]
+    },
+    {
+      "name": "head_with_cap_3d_model_roughness",
+      "filepath": "C:\\Users\\Gabriell\\Projetos\\rosto-svg\\face-3d\\tripo_convert_6e048316-6be3-424d-8f69-3a9c0430f462.fbm\\head_with_cap_3d_model_roughness.JPEG",
+      "size": [
+        4096,
+        4096
+      ]
+    }
+  ]
+}
+

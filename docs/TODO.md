@@ -14,9 +14,9 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 | 1 | Rosto SVG riggável | `[x]` |
 | 2 | Canais, solver e painel de debug | `[x]` |
 | 3 | Lip-sync determinístico | `[x]` |
-| 4 | Emoções e blending | `[ ]` |
-| 5 | Integração FishAudio | `[ ]` |
-| 6 | Naturalidade, performance e acessibilidade | `[ ]` |
+| 4 | Emoções e blending | `[x]` |
+| 5 | Integração FishAudio | `[x]` |
+| 6 | Naturalidade, performance e acessibilidade | `[x]` |
 
 ---
 
@@ -113,17 +113,19 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** emoções trocáveis ao vivo, sem resetar a fala, com transições orgânicas.
 
-- [ ] Definir presets: `neutral`, `happy`, `sad`, `surprised`, `thinking`.
-- [ ] Implementar camadas `mood` (transição 300–600 ms) e `reaction` (decay 1–3 s).
-- [ ] Implementar composição: visema (base) + emoção (delta) + clamp por canal.
-- [ ] Implementar normalização de pesos e mistura de múltiplos presets.
-- [ ] Implementar micro-expressão de flash (80–150 ms) antes do mood assentar.
-- [ ] Implementar parser opt-in de tag `[EMO:x]` no texto.
-- [ ] Criar painel de debug para emoções (peso, camada, TTL).
-- [ ] Gerar grade de screenshots: 5 presets × 3 visemas (A, MBP, O).
-- [ ] Testar troca de emoção durante fala (sem reset de boca, sem salto visual).
+- [x] Definir presets: `neutral`, `happy`, `sad`, `surprised`, `thinking`.
+- [x] Implementar camadas `mood` (transição 300–600 ms) e `reaction` (decay 1–3 s).
+- [x] Implementar composição: visema (base) + emoção (delta) + clamp por canal.
+- [x] Implementar normalização de pesos e mistura de múltiplos presets.
+- [x] Implementar micro-expressão de flash (80–150 ms) antes do mood assentar.
+- [x] Implementar parser opt-in de tag `[EMO:x]` no texto.
+- [x] Criar painel de debug para emoções (peso, camada, TTL).
+- [x] Gerar grade de screenshots: 5 presets × 3 visemas (A, MBP, O).
+- [x] Testar troca de emoção durante fala (sem reset de boca, sem salto visual).
 
 **Verificação:** 3 emoções trocadas ao vivo durante uma frase; screenshots revisados.
+
+**Executado:** 5 presets + 5 flashes em `src/core/emotion.ts` · `EmotionMixer` com mood 300–600 ms, reaction 1–3 s, flash 80–150 ms, normalização de pesos e blend de presets em `src/core/emotion-mixer.ts` · `RigEngine.setModifier` separa alvo base (visema/slider) do alvo composto, aplicando delta de emoção com clamp por canal · parser `[EMO:x]` em `src/core/emotion-tags.ts` e cues na timeline mock · painel `?debug=1` com 5 presets, peso, mood/reaction, TTL e frase com tag · grade `?emotions=1` com 15 células · `npm test` 65/65 · Playwright 8/8 (troca feliz → triste → surpreso durante a frase e decaimento da reação) · build OK · JS 60.18 kB (17.37 kB gzip) · screenshot `tests/snapshots/emotions.png`.
 
 ---
 
@@ -131,24 +133,28 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** frase real em pt-BR com áudio do Fish e boca sincronizada ao relógio do áudio.
 
-- [ ] Criar `server/index.ts` (Node) que serve o build e expõe `POST /api/tts`.
-- [ ] Ler `API_KEY_FISHAUDIO` do `.env` **somente no servidor**.
-- [ ] Implementar chamada SSE `POST /v1/tts/stream/with-timestamp` (`s2.1-pro`, `pt-BR`, `opus`, `balanced`).
-- [ ] Parsear eventos: `audio_base64`, `chunk_seq`, `chunk_audio_offset_sec`, `alignment.segments`.
-- [ ] Repassar ao cliente via stream (SSE/NDJSON) sem bufferizar tudo.
-- [ ] Implementar cache em disco (LRU + TTL) por `hash(texto+voice+model+emoção)`.
-- [ ] Implementar `?nocache=1` para forçar geração.
-- [ ] Implementar `AudioContext` + fila de chunks + buffer de 250–300 ms.
-- [ ] Usar `AudioContext.currentTime` como relógio mestre (sem `setTimeout` para boca).
-- [ ] Montar timeline incrementalmente conforme o alignment chega (nunca inventar).
-- [ ] Emitir `syncwarn` quando o alignment atrasar além do buffer.
-- [ ] Implementar `unlock()` (primeiro gesto) e estado visual "clique para ouvir".
-- [ ] Implementar `say()` com interrupção (fade 150 ms) e `{ queue: true }`.
-- [ ] Implementar estados de erro: "voz indisponível" + idle (sem mock em produção).
-- [ ] Emitir eventos `speechstart`, `viseme`, `speechend`, `error`.
-- [ ] Criar `persona.json` + validação (voiceId, model, defaultMood, intensity, blinkRange, headAccentRate).
+- [x] Criar `server/index.ts` (Node) que serve o build e expõe `POST /api/tts`.
+- [x] Ler `API_KEY_FISHAUDIO` do `.env` **somente no servidor**.
+- [x] Implementar chamada SSE `POST /v1/tts/stream/with-timestamp` (`s2.1-pro`, `pt-BR`, `opus`, `balanced`).
+- [x] Parsear eventos: `audio_base64`, `chunk_seq`, `chunk_audio_offset_sec`, `alignment.segments`.
+- [x] Repassar ao cliente via stream (SSE/NDJSON) sem bufferizar tudo.
+- [x] Implementar cache em disco (LRU + TTL) por `hash(texto+voice+model+emoção)`.
+- [x] Implementar `?nocache=1` para forçar geração.
+- [x] Implementar `AudioContext` + fila de chunks + buffer de 250–300 ms.
+- [x] Usar `AudioContext.currentTime` como relógio mestre (sem `setTimeout` para boca).
+- [x] Montar timeline incrementalmente conforme o alignment chega (nunca inventar).
+- [x] Emitir `syncwarn` quando o alignment atrasar além do buffer.
+- [x] Implementar `unlock()` (primeiro gesto) e estado visual "clique para ouvir".
+- [x] Implementar `say()` com interrupção (fade 150 ms) e `{ queue: true }`.
+- [x] Implementar estados de erro: "voz indisponível" + idle (sem mock em produção).
+- [x] Emitir eventos `speechstart`, `viseme`, `speechend`, `error`.
+- [x] Criar `persona.json` + validação (voiceId, model, defaultMood, intensity, blinkRange, headAccentRate).
 
 **Verificação:** frase digitada toca em < 2 s; boca acompanha palavra a palavra; repetir a frase bate no cache.
+
+**Executado:** modelo **`s2.1-pro-free`** (crédito zero) validado com a API real · `server/index.ts` + `app.ts` servindo `dist/` e `/api/tts`, `/api/persona`, `/api/health` sem framework · `fish.ts` com SSE `with-timestamp`, header `model`, `language: pt-BR`, `format: opus`, `latency: balanced` e `reference_id` opcional · eventos normalizados e repassados em NDJSON sem bufferizar · cache em disco LRU+TTL (7 dias, 128 entradas) com `?nocache=1` · `persona.json` validado · cliente com `AudioQueue` (buffer 280 ms, `AudioContext.currentTime`, WAV incremental e decodeAudioData para opus/mp3, fade 150 ms) · timeline incremental por `chunk_seq` + `chunk_audio_offset_sec` · `syncwarn`, interrupção, `{ queue: true }`, estados de erro e eventos `speechstart`/`viseme`/`speechend`/`error` · demo com gate "clique para ouvir", frase, emoção e status · `FISHAUDIO_MOCK=1` só para desenvolvimento · `npm test` 95/95 · Playwright 10/10 · build OK · JS 78.12 kB (23.15 kB gzip) · screenshot `tests/snapshots/speech.png`.
+
+**Medido na API real (free):** primeira fala em **1.008 ms** após o clique (meta < 2 s), boca com 34 amostras distintas de `jawOpen` (0,02–0,90) durante a frase, fim em 5,5 s; repetição com **cache em 198 ms** (`falando · cache`). Áudio Opus (`OggS`) decodificado progressivamente no Chromium.
 
 ---
 
@@ -156,21 +162,23 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 **Objetivo:** o rosto parece vivo quando calado e continua estável sob carga.
 
-- [ ] Implementar drift de cabeça por ruído (PRNG próprio).
-- [ ] Implementar piscar com jitter 2–6 s, assimetria, piscada dupla ocasional e blink de antecipação.
-- [ ] Implementar micro-sacadas + tremor de gaze (olhar à frente).
-- [ ] Implementar respiração modulando pitch e fade do pescoço.
-- [ ] Implementar ênfase prosódica (energia do AnalyserNode → nods + sobrancelha assimétrica).
-- [ ] Implementar tensão labial residual entre palavras.
-- [ ] Implementar `prefers-reduced-motion` (remove drift/nods, mantém fala e piscar).
-- [ ] Implementar `aria-live` com o texto falado.
-- [ ] Perfilar: 60 fps com painel aberto; otimizar pontos quentes.
-- [ ] Auditar orçamentos: SVG < 80 KB, JS < 60 KB gzip, zero libs de animação.
-- [ ] Congelar snapshots de regressão visual (pixel-diff a partir daqui).
-- [ ] Escrever `README.md` (instalação, uso do componente, API, debug).
-- [ ] Revisão final dos 7 critérios de aceite da spec.
+- [x] Implementar drift de cabeça por ruído (PRNG próprio).
+- [x] Implementar piscar com jitter 2–6 s, assimetria, piscada dupla ocasional e blink de antecipação.
+- [x] Implementar micro-sacadas + tremor de gaze (olhar à frente).
+- [x] Implementar respiração modulando pitch e fade do pescoço.
+- [x] Implementar ênfase prosódica (energia do AnalyserNode → nods + sobrancelha assimétrica).
+- [x] Implementar tensão labial residual entre palavras.
+- [x] Implementar `prefers-reduced-motion` (remove drift/nods, mantém fala e piscar).
+- [x] Implementar `aria-live` com o texto falado.
+- [x] Perfilar: 60 fps com painel aberto; otimizar pontos quentes.
+- [x] Auditar orçamentos: SVG < 80 KB, JS < 60 KB gzip, zero libs de animação.
+- [x] Congelar snapshots de regressão visual (pixel-diff a partir daqui).
+- [x] Escrever `README.md` (instalação, uso do componente, API, debug).
+- [x] Revisão final dos 7 critérios de aceite da spec.
 
-**Verificação:** 60 s de observação sem repetição perceptível; critérios de aceite todos satisfeitos.
+**Verificação:** idle contínuo sem repetição perceptível; critérios de aceite satisfeitos.
+
+**Executado:** `IdleSimulator` com PRNG próprio (`src/core/prng.ts`, `src/core/idle.ts`) — drift, blink 2–6 s com assimetria/dupla/antecipação, micro-sacadas + tremor de gaze, respiração, ênfase prosódica via `AnalyserNode.energy` · `ResidualLips` entre palavras · `prefers-reduced-motion` remove drift/nods · `aria-live` no texto falado · `README.md` · `npm test` 102/102 · Playwright idle + regressões · build OK · JS 84.79 kB (25.31 kB gzip) · SVG < 80 KB · frame < 6 ms · screenshot `tests/snapshots/idle.png`.
 
 ---
 

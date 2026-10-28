@@ -1,4 +1,5 @@
-import { DEFAULT_RIG_PARAMS, RIG_CHANNELS, RIG_CHANNEL_KEYS, resolveParams } from '../core/params.ts'
+import { EMOTIONS, EMOTION_LABELS, EMOTION_NAMES } from '../core/emotion.ts'
+import { DEFAULT_RIG_PARAMS, RIG_CHANNELS, RIG_CHANNEL_KEYS, mergeParams, resolveParams } from '../core/params.ts'
 import type { RigParams } from '../core/params.ts'
 import { buildFaceSvg } from '../face/face.ts'
 import { computePartStyles } from '../face/mapping.ts'
@@ -74,6 +75,32 @@ export function renderVisemeGrid(container: HTMLElement = document.body): HTMLEl
     cell.dataset.viseme = name
     grid.append(cell)
   })
+
+  container.append(grid)
+  return grid
+}
+
+export const EMOTION_GRID_VISEMES = ['a', 'mbp', 'o'] as const
+
+export function renderEmotionGrid(container: HTMLElement = document.body): HTMLElement {
+  container.querySelector('#emotion-grid')?.remove()
+
+  const grid = document.createElement('div')
+  grid.id = 'emotion-grid'
+  grid.dataset.emotionGrid = ''
+
+  let index = 0
+  for (const emotion of EMOTION_NAMES) {
+    for (const viseme of EMOTION_GRID_VISEMES) {
+      const params = mergeParams(resolveParams(VISEMES[viseme]), EMOTIONS[emotion])
+      const caption = `${EMOTION_LABELS[emotion]} · ${viseme.toUpperCase()}`
+      const cell = createCell(`emotion-grid-${index}`, params, caption)
+      cell.dataset.emotion = emotion
+      cell.dataset.viseme = viseme
+      grid.append(cell)
+      index += 1
+    }
+  }
 
   container.append(grid)
   return grid

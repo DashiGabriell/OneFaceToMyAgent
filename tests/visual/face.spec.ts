@@ -12,7 +12,7 @@ test('neutral face renders with all rig parts', async ({ page }) => {
 
   await page.goto('/')
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true')
-  await expect(page.locator('html')).toHaveAttribute('data-phase', '3')
+  await expect(page.locator('html')).toHaveAttribute('data-phase', '6')
 
   const face = page.locator('#face')
   await expect(face).toBeVisible()

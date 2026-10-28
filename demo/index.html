@@ -88,6 +88,126 @@
         text-align: center;
       }
 
+      .audio-gate {
+        padding: 10px 18px;
+        border: 1px solid rgba(154, 109, 22, 0.4);
+        border-radius: 999px;
+        background: linear-gradient(180deg, #fff6d8, #f6e3a8);
+        color: #6b4d0d;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 620;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(154, 109, 22, 0.18);
+      }
+
+      .audio-gate:hover {
+        background: linear-gradient(180deg, #fff9e6, #f9e9b8);
+      }
+
+      .speech {
+        width: 100%;
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid rgba(90, 72, 38, 0.14);
+        border-radius: 18px;
+        background: rgba(255, 254, 250, 0.92);
+        box-shadow: 0 18px 40px rgba(66, 48, 22, 0.08);
+      }
+
+      .speech-field {
+        display: grid;
+        gap: 4px;
+      }
+
+      .speech-field > span {
+        color: #8a6410;
+        font-size: 0.6rem;
+        font-weight: 650;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .speech textarea {
+        width: 100%;
+        min-height: 62px;
+        resize: vertical;
+        padding: 9px 10px;
+        border: 1px solid rgba(90, 72, 38, 0.18);
+        border-radius: 10px;
+        background: #fffdf8;
+        color: #2b2620;
+        font: inherit;
+        font-size: 0.82rem;
+        line-height: 1.4;
+      }
+
+      .speech textarea:focus,
+      .speech select:focus {
+        outline: 2px solid rgba(154, 109, 22, 0.32);
+        outline-offset: 1px;
+      }
+
+      .speech-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+      }
+
+      .speech-field--inline {
+        flex: 1;
+      }
+
+      .speech select {
+        width: 100%;
+        padding: 8px 9px;
+        border: 1px solid rgba(90, 72, 38, 0.18);
+        border-radius: 10px;
+        background: #fffdf8;
+        color: #45381f;
+        font: inherit;
+        font-size: 0.78rem;
+      }
+
+      .speech-row button {
+        padding: 9px 14px;
+        border: 1px solid rgba(90, 72, 38, 0.22);
+        border-radius: 10px;
+        background: #fbf7ec;
+        color: #45381f;
+        font: inherit;
+        font-size: 0.78rem;
+        cursor: pointer;
+      }
+
+      .speech-row button[data-speak] {
+        border-color: #d9ac00;
+        background: #f7c500;
+        color: #3a2c00;
+        font-weight: 620;
+      }
+
+      .speech-row button:hover {
+        filter: brightness(0.97);
+      }
+
+      .speech-status {
+        margin: 0;
+        min-height: 1.2em;
+        color: #6d6558;
+        font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+        font-size: 0.66rem;
+      }
+
+      .speech-status[data-state='speaking'] {
+        color: #8a6410;
+      }
+
+      .speech-status[data-state='error'] {
+        color: #a33a2a;
+      }
+
       body.debug-open {
         padding-right: 370px;
       }
@@ -164,18 +284,97 @@
       }
 
       .debug-group,
-      .debug-lipsync {
+      .debug-lipsync,
+      .debug-emotion {
         padding-top: 12px;
       }
 
       .debug-group h3,
-      .debug-lipsync h3 {
+      .debug-lipsync h3,
+      .debug-emotion h3 {
         margin: 0;
         color: #8a6410;
         font-size: 0.64rem;
         font-weight: 650;
         letter-spacing: 0.12em;
         text-transform: uppercase;
+      }
+
+      .debug-emotions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        padding: 8px 0 2px;
+      }
+
+      .debug-emotions button {
+        padding: 6px 4px;
+        border: 1px solid rgba(90, 72, 38, 0.22);
+        border-radius: 8px;
+        background: #fbf7ec;
+        color: #45381f;
+        font: inherit;
+        font-size: 0.68rem;
+        cursor: pointer;
+      }
+
+      .debug-emotions button:hover {
+        background: #f4edd8;
+      }
+
+      .debug-emotions button[aria-pressed='true'] {
+        border-color: #8a6410;
+        background: #f0dfae;
+        font-weight: 650;
+      }
+
+      .debug-actions button:disabled,
+      .debug-emotions button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+
+      .debug-emotion__status {
+        margin: 6px 0 0;
+        color: #6d6558;
+        font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+        font-size: 0.62rem;
+        line-height: 1.4;
+      }
+
+      .debug-phrase-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+        padding: 2px 0 4px;
+      }
+
+      .debug-phrase {
+        min-width: 0;
+        padding: 6px 8px;
+        border: 1px solid rgba(90, 72, 38, 0.22);
+        border-radius: 8px;
+        background: #fffdf8;
+        color: #3f3a32;
+        font: inherit;
+        font-size: 0.68rem;
+      }
+
+      .debug-phrase-row button {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid rgba(90, 72, 38, 0.22);
+        border-radius: 8px;
+        background: #fbf7ec;
+        color: #45381f;
+        font: inherit;
+        font-size: 0.68rem;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .debug-phrase-row button:hover {
+        background: #f4edd8;
       }
 
       .debug-lipsync__status {
@@ -221,7 +420,8 @@
       }
 
       #rig-grid,
-      #viseme-grid {
+      #viseme-grid,
+      #emotion-grid {
         position: fixed;
         inset: 0;
         z-index: 9999;
@@ -232,6 +432,10 @@
         padding: 16px;
         overflow: auto;
         background: #f3f1ed;
+      }
+
+      #emotion-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
       }
 
       .rig-cell {
@@ -263,7 +467,8 @@
 
       @media (max-width: 1100px) {
         #rig-grid,
-        #viseme-grid {
+        #viseme-grid,
+        #emotion-grid {
           grid-template-columns: repeat(4, minmax(0, 1fr));
         }
       }
@@ -283,7 +488,8 @@
         }
 
         #rig-grid,
-        #viseme-grid {
+        #viseme-grid,
+        #emotion-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
